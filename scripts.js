@@ -14,6 +14,13 @@
  * @returns {string} Upprunalegi strengurinn hliðraður um n til hægri
  */
 function encode(str, n, alphabet = '') {
+  let LETTERS = alphabet;
+  let Caesar = LETTERS.slice(n, LETTERS.length)+LETTERS.slice(0,n-1);
+  let code = '';
+  for (var i = 0; i < str.length; i++) {
+    code += Caesar[LETTERS.indexOf(str[i])];
+  }
+  return code;
   return '';
 }
 
@@ -26,6 +33,14 @@ function encode(str, n, alphabet = '') {
  * @returns {string} Upprunalegi strengurinn hliðraður um n til vinstri
  */
 function decode(str, n, alphabet = '') {
+  let LETTERS = alphabet;
+  let Caesar = LETTERS.slice(n, LETTERS.length)+LETTERS.slice(0,n-1);
+  let code = '';
+  console.log(Caesar)
+  for (var i = 0; i < str.length; i++) {
+    code += LETTERS[Caesar.indexOf(str[i])];
+  }
+  return code;
   return '';
 }
 
