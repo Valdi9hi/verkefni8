@@ -4,9 +4,6 @@
  * Verður að passa _nákvæmlega_ við gefið HTML, mun annars brotna.
  * Þ.e.a.s., ekki þarf að skrifa meðhöndlun á HTML elementum sem vantar
  */
-const ENTER_KEYCODE = 13;
-
-
 
 /**
  * Kóðar streng með því að hliðra honum um n stök.
@@ -17,10 +14,10 @@ const ENTER_KEYCODE = 13;
  * @returns {string} Upprunalegi strengurinn hliðraður um n til hægri
  */
 function encode(str, n, alphabet = '') {
-  let LETTERS = alphabet;
-  let Caesar = LETTERS.slice(n, LETTERS.length)+LETTERS.slice(0,n);
+  const LETTERS = alphabet;
+  const Caesar = LETTERS.slice(n, LETTERS.length) + LETTERS.slice(0, n);
   let code = '';
-  for (var i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i += 1) {
     code += Caesar[LETTERS.indexOf(str[i])];
   }
   return code;
@@ -35,21 +32,20 @@ function encode(str, n, alphabet = '') {
  * @returns {string} Upprunalegi strengurinn hliðraður um n til vinstri
  */
 function decode(str, n, alphabet = '') {
-  let LETTERS = alphabet;
-  let Caesar = LETTERS.slice(n, LETTERS.length)+LETTERS.slice(0,n);
+  const LETTERS = alphabet;
+  const Caesar = LETTERS.slice(n, LETTERS.length) + LETTERS.slice(0, n);
   let code = '';
-  console.log(Caesar)
-  for (var i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i += 1) {
     code += LETTERS[Caesar.indexOf(str[i])];
   }
   return code;
 }
 
-function decript(type,str,n,alphabet) {
+function decript(type, str, n, alphabet) {
   if (type === 'encode') {
-    return encode(str,n,alphabet);
-  } 
-  return decode(str,n,alphabet);
+    return encode(str, n, alphabet);
+  }
+  return decode(str, n, alphabet);
 }
 
 const Caesar = (() => {
@@ -58,55 +54,48 @@ const Caesar = (() => {
   // Default type, uppfært af radio input
   let type = 'encode';
   // Default hliðrun, uppfært af "shift"
-  let shift = document.querySelector('.shiftValue');
-  let n = parseInt(shift.textContent);
   let str = '';
-  let result = document.querySelector('.result');
+  const shift = document.querySelector('.shiftValue');
+  const result = document.querySelector('.result');
   const alpha = document.querySelector('#alphabet');
   const code = document.querySelector('input[value = encode]');
   const afcode = document.querySelector('input[value = decode]');
   const range = document.querySelector('#shift');
   const input = document.querySelector('#input');
-  function init(_form) { 
+  let n = parseInt(shift.textContent, 10);
+
+  function init() {
     // Alphabet
-    alpha.addEventListener('keyup', (e) =>{
-      const { keyCode, target } = e;
-      const { value } = target;
-      if (keyCode === ENTER_KEYCODE) {
-        alphabet = value; 
-        range.max = alphabet.length;
-        console.log(type,str.toLocaleUpperCase(),n,alphabet);
-      }
+    alpha.addEventListener('input', (e) => {
+      alphabet = e.target.value;
+      range.max = alphabet.length;
+      result.textContent = decript(type, str.toLocaleUpperCase(), n, alphabet);
     });
-    
+
     // Radio
     // Encode
-    code.addEventListener('click', (e) => {
+    code.addEventListener('click', () => {
       type = 'encode';
-      console.log(type,str.toLocaleUpperCase(),n,alphabet);
-      result.textContent = decript(type,str.toLocaleUpperCase(),n,alphabet);
+      result.textContent = decript(type, str.toLocaleUpperCase(), n, alphabet);
     });
-    
+
     // Decode
-    afcode.addEventListener('click', (e) => {
+    afcode.addEventListener('click', () => {
       type = 'decode';
-      console.log(type,str.toLocaleUpperCase(),n,alphabet);
-      result.textContent = decript(type,str.toLocaleUpperCase(),n,alphabet);
+      result.textContent = decript(type, str.toLocaleUpperCase(), n, alphabet);
     });
-    
+
     // Range
     range.addEventListener('input', (e) => {
       shift.textContent = e.target.value;
-      n = Number.parseInt(shift.textContent);
-      console.log(type,str.toLocaleUpperCase(),n,alphabet);
-      result.textContent = decript(type,str.toLocaleUpperCase(),n,alphabet);
+      n = Number.parseInt(shift.textContent, 10);
+      result.textContent = decript(type, str.toLocaleUpperCase(), n, alphabet);
     });
-    
-    //Input
-    input.addEventListener('input', (e) =>{
+
+    // Input
+    input.addEventListener('input', (e) => {
       str = e.target.value;
-      console.log(type,str.toLocaleUpperCase(),n,alphabet);
-      result.textContent = decript(type,str.toLocaleUpperCase(),n,alphabet);
+      result.textContent = decript(type, str.toLocaleUpperCase(), n, alphabet);
     });
   }
   return {
@@ -115,8 +104,5 @@ const Caesar = (() => {
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log(encode("VALDI",5,"AÁBDÐEÉFGHIÍJKLMNOÓPRSTUÚVXYÝÞÆÖ"));
-  const ceasarForm = document.querySelector('.ceasar');
-  console.log('test');
-  Caesar.init(ceasarForm);
+  Caesar.init();
 });
